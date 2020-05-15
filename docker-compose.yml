@@ -1,0 +1,34 @@
+version: '3.1'
+
+services:
+    database:
+        image: mysql:8.0.20
+        restart: always
+        environment:
+          MYSQL_ROOT_PASSWORD: test
+          MYSQL_DATABASE: befg
+        networks:
+            - www
+    
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+          - 8080:8080
+        networks:
+          - www
+    web:
+        build: 
+          context: ./docker/php
+          args:
+            USER_ID: ${USER_ID}
+            GROUP_ID: ${GROUP_ID}
+        volumes:
+          - .:/usr/src/myapp
+        ports:
+          - 8000:8000
+        networks:
+          - www
+
+networks:
+    www:
